@@ -6,6 +6,18 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "../../lib/auth";
 import { P2PTransfer } from "../../../components/P2PTransfers";
 
+interface Transaction {
+    startTime: Date;
+    amount: number;
+    status: string;
+    provider: string;
+  }
+
+  interface P2PTransaction {
+    timestamp: Date;
+    amount: number
+  }
+
 async function getBalance() {
 
     const session = await getServerSession(authOptions);
@@ -27,7 +39,7 @@ async function getOnRampTransactions() {
             userId: Number(session?.user?.id)
         }
     });
-    return txns.map(t => ({
+    return txns.map((t:Transaction) => ({
         time: t.startTime,
         amount: t.amount,
         status: t.status,
@@ -42,7 +54,7 @@ async function getP2PTransfers() {
             toUserId: Number(session?.user?.id)
         }
     });
-    return txns.map(t => ({
+    return txns.map((t : P2PTransaction) => ({
         time: t.timestamp,
         amount: t.amount
     }))
